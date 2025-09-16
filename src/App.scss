@@ -1,0 +1,45 @@
+@import './styles/variables';
+
+.app {
+  min-height: 100vh;
+  background-color: $background-color;
+  padding: $spacing-md;
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    
+    h1 {
+      color: $text-color;
+      font-size: 2rem;
+    }
+  }
+
+  &__main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $spacing-md;
+  }
+}
+
+.kanban {
+  &__board {
+    display: flex;
+    gap: $spacing-md;
+    align-items: flex-start;
+    min-height: 450px;
+    
+    @include responsive($breakpoint-sm) {
+      flex-direction: row;
+    }
+    
+    @media (max-width: ($breakpoint-sm - 1)) {
+      flex-direction: column;
+      
+      .column {
+        width: 100%;
+        margin-bottom: $spacing-lg;
+      }
+    }
+  }
+}

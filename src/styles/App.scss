@@ -1,0 +1,37 @@
+@import './variables';
+
+.app {
+  min-height: 100vh;
+  background-color: $background-color;
+  
+  &__header {
+    background-color: $primary-color;
+    color: white;
+    padding: $spacing-lg;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+  }
+
+  &__main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+}
+
+.kanban {
+  &__board {
+    display: flex;
+    gap: $spacing-lg;
+    flex-wrap: wrap;
+    
+    @include responsive($breakpoint-lg) {
+      flex-wrap: nowrap;
+    }
+  }
+}
