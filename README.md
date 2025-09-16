@@ -2,6 +2,8 @@
 
 A modern, responsive Kanban board application built with React and TypeScript. Features drag-and-drop task management, dark/light theme support, and local storage persistence.
 
+[Live Preview](https://joyzai-kabana-board.netlify.app/)
+
 ## Features
 
 - 📋 Drag and drop task management
