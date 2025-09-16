@@ -1,4 +1,4 @@
-import { Task, KanbanState } from '../types';
+import { Task, KanbanState } from '../interfaces/kanban';
 
 const STORAGE_KEY = 'kanban_state';
 

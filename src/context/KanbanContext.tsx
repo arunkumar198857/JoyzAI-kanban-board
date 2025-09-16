@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { KanbanState, KanbanContextType, Task, ColumnType } from '../interfaces/kanban';
+import { KanbanState, KanbanContextType, ColumnType } from '../interfaces/kanban';
 import { kanbanService } from '../services/kanban.service';
 import { COLUMN_TYPES } from '../constants';
 

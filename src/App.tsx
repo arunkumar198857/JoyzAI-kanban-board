@@ -1,6 +1,5 @@
 import React from 'react';
-import { KanbanProvider } from './context/KanbanContext';
-import { useKanban } from './context/KanbanContext';
+import { KanbanProvider, useKanban } from './context/KanbanContext';
 import { Column as IColumn } from './interfaces/kanban';
 import { ThemeProvider } from './context/ThemeContext';
 import TaskForm from './components/TaskForm/TaskForm';
