@@ -3,6 +3,8 @@
 .column {
   background-color: rgba($card-background, 0.8);
   border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
   padding: $spacing-md;
   min-width: 300px;
   margin: 0 $spacing-md;
@@ -37,6 +39,22 @@
     overflow-y: auto;
     min-height: 200px;
     padding-right: $spacing-sm; // Space for scrollbar
+    position: relative;
+
+    &.can-drop {
+      background-color: rgba($primary-color, 0.05);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+    }
+
+    .task-card-wrapper {
+      position: relative;
+      margin-bottom: $spacing-md;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
 
     // Styling the scrollbar
     &::-webkit-scrollbar {

@@ -20,13 +20,13 @@ export const KanbanProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Add a new task
   const addTask = (title: string, description: string) => {
-    const newTask = kanbanService.createTask(title, description);
+    const newTask = kanbanService.createTask(title, description, state);
     const newState: KanbanState = {
       ...state,
       tasks: [newTask, ...state.tasks],
-      columns: state.columns.map(column =>
+      columns: state.columns.map((column) =>
         column.id === COLUMN_TYPES.TODO
-          ? { ...column, tasks: [newTask, ...column.tasks] }
+          ? { ...column, tasks: [newTask, ...column.tasks].sort((a, b) => a.index - b.index) }
           : column
       )
     };
@@ -35,9 +35,9 @@ export const KanbanProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     kanbanService.saveState(newState);
   };
 
-  // Move task between columns or reorder within column
-  const moveTask = (taskId: string, targetColumn: ColumnType, targetTaskId?: string) => {
-    const newState = kanbanService.moveTask(state, taskId, targetColumn, targetTaskId);
+  // Move task between columns
+  const moveTask = (taskId: string, targetColumn: ColumnType) => {
+    const newState = kanbanService.moveTask(state, taskId, targetColumn);
     setState(newState);
     kanbanService.saveState(newState);
   };

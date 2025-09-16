@@ -6,6 +6,7 @@ export interface Task {
   description: string;
   column: ColumnType;
   createdAt: Date;
+  index: number;
 }
 
 export interface Column {
@@ -22,7 +23,7 @@ export interface KanbanState {
 export interface KanbanContextType {
   state: KanbanState;
   addTask: (title: string, description: string) => void;
-  moveTask: (taskId: string, targetColumn: ColumnType, targetTaskId?: string) => void;
+  moveTask: (taskId: string, targetColumn: ColumnType) => void;
   deleteTask: (taskId: string) => void;
 }
 

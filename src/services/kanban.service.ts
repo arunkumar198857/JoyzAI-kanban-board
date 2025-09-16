@@ -48,13 +48,21 @@ class KanbanService {
     }
   }
 
-  createTask(title: string, description: string): Task {
+  createTask(title: string, description: string, state?: KanbanState): Task {
+    // Get the highest index in the TODO column
+    const highestIndex = state 
+      ? Math.max(-1, ...state.columns
+          .find(col => col.id === COLUMN_TYPES.TODO)?.tasks
+          .map(t => t.index) || [-1])
+      : -1;
+
     return {
       id: generateId(),
       title,
       description,
       column: COLUMN_TYPES.TODO as ColumnType,
-      createdAt: new Date()
+      createdAt: new Date(),
+      index: highestIndex + 1
     };
   }
 
@@ -64,24 +72,30 @@ class KanbanService {
     targetTaskId: string | undefined,
     updatedTask: Task
   ): Task[] {
-    const currentTasks = [...tasks];
-    const taskIndex = currentTasks.findIndex(t => t.id === taskId);
-    
-    if (taskIndex !== -1) {
-      currentTasks.splice(taskIndex, 1);
-    }
-
+    // If no target specified, add to the end
     if (!targetTaskId) {
-      return [updatedTask, ...currentTasks];
+      return [...tasks.filter(t => t.id !== taskId), updatedTask];
     }
 
-    const targetIndex = currentTasks.findIndex(t => t.id === targetTaskId);
-    if (targetIndex === -1) {
-      return [updatedTask, ...currentTasks];
+    const result = [...tasks];
+    const movedTaskIndex = result.findIndex(t => t.id === taskId);
+    const targetTaskIndex = result.findIndex(t => t.id === targetTaskId);
+
+    // If either task is not found, return original array
+    if (movedTaskIndex === -1 || targetTaskIndex === -1) {
+      return tasks;
     }
 
-    currentTasks.splice(targetIndex, 0, updatedTask);
-    return currentTasks;
+    // Remove the task from its current position
+    result.splice(movedTaskIndex, 1);
+
+    // Find the new position of the target (it might have shifted if target was after the moved task)
+    const newTargetIndex = result.findIndex(t => t.id === targetTaskId);
+
+    // Insert the moved task at the target position
+    result.splice(newTargetIndex, 0, updatedTask);
+
+    return result;
   }
 
   updateColumnTasks(
@@ -89,17 +103,8 @@ class KanbanService {
     taskId: string,
     sourceColumn: ColumnType,
     targetColumn: ColumnType,
-    targetTaskId: string | undefined,
     updatedTask: Task
   ): Column {
-    // Same column reordering
-    if (column.id === sourceColumn && column.id === targetColumn) {
-      return {
-        ...column,
-        tasks: this.reorderTasks(column.tasks, taskId, targetTaskId, updatedTask)
-      };
-    }
-
     // Remove from source column
     if (column.id === sourceColumn) {
       return {
@@ -108,11 +113,11 @@ class KanbanService {
       };
     }
 
-    // Add to target column
+    // Add to target column at the top
     if (column.id === targetColumn) {
       return {
         ...column,
-        tasks: this.reorderTasks(column.tasks, taskId, targetTaskId, updatedTask)
+        tasks: [updatedTask, ...column.tasks]
       };
     }
 
@@ -122,18 +127,17 @@ class KanbanService {
   moveTask(
     state: KanbanState,
     taskId: string,
-    targetColumn: ColumnType,
-    targetTaskId?: string
+    targetColumn: ColumnType
   ): KanbanState {
     const task = state.tasks.find(t => t.id === taskId);
-    if (!task) return state;
+    if (!task || task.column === targetColumn) return state;
 
     const updatedTask: Task = { ...task, column: targetColumn };
     return {
       ...state,
       tasks: state.tasks.map(t => t.id === taskId ? updatedTask : t),
       columns: state.columns.map(column =>
-        this.updateColumnTasks(column, taskId, task.column, targetColumn, targetTaskId, updatedTask)
+        this.updateColumnTasks(column, taskId, task.column, targetColumn, updatedTask)
       )
     };
   }

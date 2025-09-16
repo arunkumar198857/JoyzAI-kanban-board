@@ -1,6 +1,7 @@
 import React from 'react';
 import { KanbanProvider } from './context/KanbanContext';
 import { useKanban } from './context/KanbanContext';
+import { Column as IColumn } from './interfaces/kanban';
 import { ThemeProvider } from './context/ThemeContext';
 import TaskForm from './components/TaskForm/TaskForm';
 import Column from './components/Column/Column';
@@ -14,7 +15,7 @@ const KanbanBoard: React.FC = () => {
     <div className="kanban">
       <TaskForm />
       <div className="kanban__board">
-        {state.columns.map(column => (
+        {state.columns.map((column: IColumn) => (
           <Column key={column.id} column={column} />
         ))}
       </div>

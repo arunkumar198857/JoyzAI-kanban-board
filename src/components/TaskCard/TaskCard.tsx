@@ -1,34 +1,36 @@
 import React from 'react';
-import { Task } from '../../types';
+import { Task } from '../../interfaces/kanban';
 import { useKanban } from '../../context/KanbanContext';
 import './TaskCard.scss';
 
 interface TaskCardProps {
   task: Task;
+  isDragging?: boolean;
+  onDragStart: () => void;
+  onDragEnd: () => void;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ 
+  task, 
+  isDragging = false,
+  onDragStart,
+  onDragEnd 
+}) => {
   const { deleteTask } = useKanban();
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation();
     e.dataTransfer.setData('taskId', task.id);
-    // Add a class to the dragged element
-    e.currentTarget.classList.add('task-card--dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    onDragStart();
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    // Remove the dragging class
-    e.currentTarget.classList.remove('task-card--dragging');
-    // Remove any remaining drop target indicators
-    const taskCards = document.querySelectorAll('.task-card--drop-target');
-    taskCards.forEach(card => card.classList.remove('task-card--drop-target'));
+    onDragEnd();
   };
 
   return (
     <div
-      className="task-card"
+      className={`task-card ${isDragging ? 'task-card--dragging' : ''}`}
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
