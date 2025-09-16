@@ -1,8 +1,10 @@
 import React from 'react';
 import { KanbanProvider } from './context/KanbanContext';
 import { useKanban } from './context/KanbanContext';
+import { ThemeProvider } from './context/ThemeContext';
 import TaskForm from './components/TaskForm/TaskForm';
 import Column from './components/Column/Column';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import './styles/App.scss';
 
 const KanbanBoard: React.FC = () => {
@@ -22,16 +24,19 @@ const KanbanBoard: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <KanbanProvider>
-      <div className="app">
-        <header className="app__header">
-          <h1>JoyzAI - Kanban Board</h1>
-        </header>
-        <main className="app__main">
-          <KanbanBoard />
-        </main>
-      </div>
-    </KanbanProvider>
+    <ThemeProvider>
+      <KanbanProvider>
+        <div className="app">
+          <header className="app__header">
+            <h1>JoyzAI - Kanban Board</h1>
+            <ThemeToggle />
+          </header>
+          <main className="app__main">
+            <KanbanBoard />
+          </main>
+        </div>
+      </KanbanProvider>
+    </ThemeProvider>
   );
 }
 
